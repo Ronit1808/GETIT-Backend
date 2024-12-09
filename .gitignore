@@ -1,0 +1,10 @@
+ECHO is on.
+*.pyc
+__pycache__/
+.env
+.venv
+db.sqlite3
+/media/
+/staticfiles/
+*.log
+*.migrations/__pycache__/
