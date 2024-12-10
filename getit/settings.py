@@ -28,7 +28,7 @@ SECRET_KEY =  config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=False, cast=bool)
 
-ALLOWED_HOSTS = ['getit-backend-95de.onrender.com']
+ALLOWED_HOSTS = ['getit-backend-95de.onrender.com' , '127.0.0.1']
 
 
 # Application definition
@@ -148,6 +148,9 @@ STORAGES = {
     "staticfiles": {
         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
     },
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    }
 }
 
 # Default primary key field type
