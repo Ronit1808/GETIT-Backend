@@ -21,7 +21,7 @@ CustomUser = get_user_model()
 # Create your views here.
 
 @api_view(["GET"])
-def index(request):
+def products(request):
     products = Product.objects.all()
     serializer = ProductSerializer(products , many= True)
     return Response(serializer.data)
