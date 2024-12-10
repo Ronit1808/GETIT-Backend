@@ -43,7 +43,8 @@ INSTALLED_APPS = [
     'core',
     'app',
     'rest_framework',
-    'corsheaders'
+    'corsheaders',
+    'whitenoise',
 ]
 
 MIDDLEWARE = [
