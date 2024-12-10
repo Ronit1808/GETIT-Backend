@@ -7,8 +7,6 @@ from django.contrib.auth.hashers import make_password
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
 from rest_framework import status
-from django.contrib.auth.models import User
-from django.utils.crypto import get_random_string
 from django.contrib.auth import get_user_model
 from django.db import transaction
 from django.conf import settings
@@ -141,7 +139,7 @@ def signup(request):
     user = CustomUser.objects.create(
         username=username,
         email=email,
-        password=make_password(password)  # Hash the password before saving
+        password=make_password(password)  
     )
     cart = Cart.objects.create(user=user)
     user.save()
@@ -176,10 +174,9 @@ def clear_cart(request):
     
  
 
-# Initialize Razorpay client
+
 razorpay_client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
 
-# Utility function to generate order ID
 def generate_order_id():
     return str(uuid.uuid4()).replace('-', '').upper()[:10]
 
@@ -204,7 +201,7 @@ def complete_order(request):
         if Order.objects.filter(cart=cart).exists():
             return Response({"error": "Order already exists for this cart."}, status=400)
 
-        # Compute total price and number of items
+        
         cart_items = cart.items.all()
         total_price = sum(item.product.price * item.quantity for item in cart_items)
         num_of_items = sum(item.quantity for item in cart_items)
@@ -214,7 +211,7 @@ def complete_order(request):
         
 
         with transaction.atomic():
-            # Create the order
+          
             order = Order.objects.create(
                 user=user,
                 cart=cart,
@@ -228,7 +225,7 @@ def complete_order(request):
             )
             
 
-            # Mark the cart as paid
+            
             cart.paid = True
             old_cart_code = cart_code
             cart.save()
@@ -238,7 +235,7 @@ def complete_order(request):
 
 
             if(payment_method == 'razorpay'):
-            # Create a Razorpay Order
+          
                 razorpay_order = razorpay_client.order.create(dict(
                     amount=int(total_price * 100),  # Amount in paise
                     currency='INR',
@@ -272,22 +269,20 @@ logger = logging.getLogger(__name__)
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def verify_payment(request):
-    """
-    Verify Razorpay payment and update the Order status.
-    """
+   
     try:
         logger.info("Payment verification data: %s", request.data)
 
-        # Extract payment details from the request
+        
         payment_id = request.data.get('razorpay_payment_id')
         razorpay_order_id = request.data.get('razorpay_order_id')
         signature = request.data.get('razorpay_signature')
 
-        # Ensure all required fields are present
+        
         if not (payment_id and razorpay_order_id and signature):
             return Response({'error': 'Missing required payment details'}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Verify payment signature
+        
         params = {
             'razorpay_order_id': razorpay_order_id,
             'razorpay_payment_id': payment_id,
@@ -295,7 +290,7 @@ def verify_payment(request):
         }
         razorpay_client.utility.verify_payment_signature(params)
 
-        # Update the corresponding Order instance
+       
         try:
             order = Order.objects.get(razorpay_order_id=razorpay_order_id)  # Match Razorpay's order ID
             order.status = 'Completed'
@@ -309,7 +304,7 @@ def verify_payment(request):
         return Response({'error': 'Invalid payment signature'}, status=status.HTTP_400_BAD_REQUEST)
 
     except Exception as e:
-        # Log the exception (optional, depending on your setup)
+        
         print(str(e))
         return Response({'error': 'Error during payment verification', 'message': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 

@@ -63,12 +63,12 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ["id", "username", "email", "first_name", "last_name", "city", "address", "phone", "cart_code"]
     def get_cart_code(self, obj):
         try:
-            # Fetch the most recent unpaid cart
+           
             cart = Cart.objects.filter(user=obj, paid=False).order_by('-created_at').first()
             if cart:
                 return cart.cart_code
             else:
-                # If no unpaid cart exists, create one dynamically
+               
                 new_cart = Cart.objects.create(user=obj)
                 return new_cart.cart_code
         except Exception as e:

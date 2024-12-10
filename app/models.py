@@ -41,7 +41,7 @@ class Cart(models.Model):
     modified_at = models.DateTimeField(auto_now=True, blank=True, null=True)
     
     def save(self, *args, **kwargs):
-        # Generate unique cart code if it doesn't exist
+        
         if not self.cart_code:
             self.cart_code = get_random_string(32)
         super().save(*args, **kwargs)
@@ -81,5 +81,3 @@ class Order(models.Model):
         return self.order_id
     
     
-    #keyid rzp_test_stxpngjf0fuOIL
-    #keysecret fmUprCCteVBrL8drbbNU2QlC
