@@ -66,6 +66,7 @@ REST_FRAMEWORK = {
     )
 }
 
+CORS_ALLOW_ALL_ORIGINS = False
 CORS_ALLOWED_ORIGINS = [
     'https://getit1.netlify.app',
     "http://localhost:3000",  
