@@ -3,7 +3,5 @@ ECHO is on.
 __pycache__/
 .env
 .venv
-/media/
-/staticfiles/
 *.log
 *.migrations/__pycache__/
