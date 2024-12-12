@@ -20,7 +20,7 @@ import logging
 CustomUser = get_user_model()
 # Create your views here.
 
-@api_view(['GET'])
+@api_view(['GET' , 'HEAD'])
 def health_check(request):
     return Response({"status": "ok"}, status=200)
 
