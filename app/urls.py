@@ -17,6 +17,7 @@ urlpatterns = [
     path('verify_payment/', views.verify_payment , name='verify_payment'),
     path('order_detail/<str:order_id>/', views.order_detail , name='order_detail'),
     path('user_orders/', views.user_orders , name='user_orders'),
+    path('health_check/', views.health_check , name='health_check'),
    
 
 ]   
